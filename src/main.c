@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include <SDL2/SDL_image.h>
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
@@ -8,8 +9,8 @@
 SDL_Window *window;
 SDL_Renderer *renderer;
 SDL_Surface *surface;
-#define w 512
-#define h 512
+int w= 512;
+int h= 512;
 int running=1;
 int t = 0;
 bool KEYS[322];
@@ -43,10 +44,18 @@ void render(){
    }
    if (SDL_MUSTLOCK(surface)) SDL_UnlockSurface(surface);
    
+   SDL_Texture* cube = IMG_LoadTexture(renderer, "res/cube0001.png");
    SDL_Texture *screenTexture = SDL_CreateTextureFromSurface(renderer, surface);
 
+   SDL_Rect texture_rect;
+texture_rect.x = 0; //the x coordinate
+texture_rect.y = 0; //the y coordinate
+texture_rect.w = 50; //the width of the texture
+texture_rect.h = 50; //the height of the texture
+   //
    SDL_RenderClear(renderer);
    SDL_RenderCopy(renderer, screenTexture, NULL, NULL);
+   SDL_RenderCopy(renderer, cube, NULL, &texture_rect); 
    SDL_RenderPresent(renderer);
    SDL_DestroyTexture(screenTexture);
 }
