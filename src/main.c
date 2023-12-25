@@ -1,5 +1,6 @@
 #include <SDL.h>
 #include <SDL2/SDL_image.h>
+#include <stdio.h>
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
@@ -11,8 +12,12 @@ SDL_Renderer *renderer;
 SDL_Surface *surface;
 int w= 512;
 int h= 512;
+SDL_Point mpos = {0,0};
+int mx=-1, my=-1;
 int running=1;
 int t = 0;
+
+   SDL_Rect texture_rect = {0,0,50,50};
 bool KEYS[322];
 void quit(){
          SDL_Quit();
@@ -20,10 +25,13 @@ void quit(){
          running=0;
 }
 void events(){
+   SDL_GetMouseState(&mpos.x, &mpos.y);
    SDL_Event e;
+         printf("%d - %d, %d\n ",mpos.x, mpos.y, SDL_PointInRect(&mpos, &texture_rect));
    while (SDL_PollEvent(&e)) {
       if (e.type==SDL_KEYDOWN){
          KEYS[e.key.keysym.sym] = true;
+      }else if (e.type == SDL_MOUSEBUTTONDOWN){
       }else if (e.type == SDL_KEYUP){
          KEYS[e.key.keysym.sym] = false;
       }else if (e.type == SDL_QUIT){
@@ -47,11 +55,6 @@ void render(){
    SDL_Texture* cube = IMG_LoadTexture(renderer, "res/cube0001.png");
    SDL_Texture *screenTexture = SDL_CreateTextureFromSurface(renderer, surface);
 
-   SDL_Rect texture_rect;
-texture_rect.x = 0; //the x coordinate
-texture_rect.y = 0; //the y coordinate
-texture_rect.w = 50; //the width of the texture
-texture_rect.h = 50; //the height of the texture
    //
    SDL_RenderClear(renderer);
    SDL_RenderCopy(renderer, screenTexture, NULL, NULL);
