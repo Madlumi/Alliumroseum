@@ -57,7 +57,11 @@ I init (){
    FOR(mkeyn,{MKEYS[i] = false;});
    buttons = btn_list_new();
    RECT c = {1,1,300,100};
-    buttons->add(buttons,btn_new(c,btn_n,btn_h,btn_c,btn_d, TMP_Bclick));
+   FOR(15,{
+   buttons->add(buttons,btn_new((RECT) {20,20+60*i,150,50},btn_n,btn_h,btn_c,btn_d, TMP_Bclick));
+   if(i==3)buttons->btns[i].enable(&buttons->btns[i],0);
+   if(i==2)buttons->btns[i].enable(&buttons->btns[i],1);
+   })
    return 1;
 }
 V tick(){
