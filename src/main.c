@@ -111,7 +111,7 @@ V loop(){ events(); tick(); render(); t++; }
 I main(int argc, char* argv[]) {
    if(!init()){printf("INIT ERROR\n");return 0;}
 #ifdef __EMSCRIPTEN__
-   emscripten_set_main_loop(mainLoop, 0, 1);
+   emscripten_set_main_loop(loop, 0, 1);
 #else
    W(running){loop(); SDL_Delay(16);}
 #endif 
