@@ -51,7 +51,7 @@ I init (){
    
    FOR(322,{KEYS[i] = false;});
    buttons = btn_list_new();
-   RECT c = {1,1,100,100};
+   RECT c = {1,1,300,100};
     buttons->add(buttons,btn_new(c,btn_n,btn_h,btn_c,btn_d));
    return 1;
 }
