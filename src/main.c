@@ -15,7 +15,7 @@
 
 SDL_Window *window;SDL_Renderer *renderer;SDL_Surface *surface;
 
-TTF_Font* baseFont; SDL_Texture* cube ;
+TTF_Font* baseFont; TEXTURE* cube ;
 btn_list *buttons;
 I w= 512; I h= 512;
 //Input
@@ -75,6 +75,7 @@ V render(){
    SDL_RenderClear(renderer);
    SDL_RenderCopy(renderer, screenTexture, NULL, NULL);
    SDL_RenderCopy(renderer, cube, NULL, &texture_rect); 
+   buttons->draw(buttons, renderer);
    SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
    SDL_RenderPresent(renderer);
 
@@ -99,7 +100,7 @@ I init (){
    FOR(322,{KEYS[i] = false;});
    buttons = btn_list_new();
    RECT c = {1,1,100,100};
-    buttons->add(buttons,btn_New(c));
+    buttons->add(buttons,btn_new(c,cube,cube,cube,cube));
    return 1;
 }
 
