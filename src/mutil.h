@@ -1,6 +1,8 @@
 #pragma once
+#include <stdbool.h>
 
 typedef int    I;
+typedef bool B ;
 typedef float  F;
 typedef double D;
 typedef void V ;

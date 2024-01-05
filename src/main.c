@@ -19,7 +19,10 @@ TTF_Font* baseFont; TEXTURE* cube ;
 btn_list *buttons;
 I w= 512; I h= 512;
 //Input
-bool KEYS[322];
+#define keyn 512 
+#define mkeyn 24
+B KEYS[keyn];
+B MKEYS[mkeyn];
 POINT mpos = {0,0};
 
 I running=1;I t = 0;
@@ -33,6 +36,7 @@ RECT texture_rect = {0,0,200,200};
 V quit(){SDL_Quit(); running=0;}
 V updateCookieCounter(){sprintf(msg,"%d Cookies", cookies);}
 TEXTURE* btn_n;TEXTURE* btn_h;TEXTURE* btn_c;TEXTURE* btn_d;
+V TMP_Bclick(){cookies++;updateCookieCounter();}
 I init (){
    //base sdl--------------
    SDL_Init(SDL_INIT_VIDEO);
@@ -49,28 +53,27 @@ I init (){
    //misc------------------
    updateCookieCounter();
    
-   FOR(322,{KEYS[i] = false;});
+   FOR(keyn,{KEYS[i] = false;});
+   FOR(mkeyn,{MKEYS[i] = false;});
    buttons = btn_list_new();
    RECT c = {1,1,300,100};
-    buttons->add(buttons,btn_new(c,btn_n,btn_h,btn_c,btn_d));
+    buttons->add(buttons,btn_new(c,btn_n,btn_h,btn_c,btn_d, TMP_Bclick));
    return 1;
 }
-V tick(){buttons->tick(buttons, mpos);}
+V tick(){
+   buttons->tick(buttons, mpos, MKEYS[0]);
+   if(KEYS[SDLK_q]){quit();}
+}
 V events(){
    SDL_GetMouseState(&mpos.x, &mpos.y);
    SDL_Event e;
    W(SDL_PollEvent(&e)) {
-      if (IN(e.key.keysym.sym,0,322-1)){
-         if (e.type==SDL_KEYDOWN){KEYS[e.key.keysym.sym] = 1;}
-         eif (e.type == SDL_KEYUP){KEYS[e.key.keysym.sym] = 0;}
-      }
-      if (e.type == SDL_MOUSEBUTTONDOWN){
-            btn * b = buttons->in(buttons, mpos);
-            if(b!=NULL){cookies++;updateCookieCounter();}
-      }
+      if (e.type==SDL_KEYDOWN){if(!IN(e.key.keysym.sym,0,keyn-1)){printf("key: %d\n",e.key.keysym.sym);return;}KEYS[e.key.keysym.sym] = 1;}
+      eif (e.type == SDL_KEYUP){if(!IN(e.key.keysym.sym,0,keyn-1)){return;}KEYS[e.key.keysym.sym] = 0;}
+      eif (e.type == SDL_MOUSEBUTTONDOWN){MKEYS[0]=1;}
+      eif (e.type == SDL_MOUSEBUTTONUP){MKEYS[0]=0;}
       eif (e.type == SDL_QUIT){quit();}
    }
-   if(KEYS[SDLK_q]){quit();}
 }
 
 
