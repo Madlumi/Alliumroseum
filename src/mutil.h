@@ -10,5 +10,6 @@ typedef char*  S;
 #define PRIV static;
 #define IN(x,l,h) ((l)<=(x)&&(x)<=(h))
 #define eif else if
+#define el else
 #define W(x) while((x))
 #define FOR(n,x) {for(int i=0;i<n;++i){x;}}

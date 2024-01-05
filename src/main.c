@@ -32,8 +32,30 @@ RECT texture_rect = {0,0,200,200};
 
 V quit(){SDL_Quit(); running=0;}
 V updateCookieCounter(){sprintf(msg,"%d Cookies", cookies);}
-
-V tick(){}
+TEXTURE* btn_n;TEXTURE* btn_h;TEXTURE* btn_c;TEXTURE* btn_d;
+I init (){
+   //base sdl--------------
+   SDL_Init(SDL_INIT_VIDEO);
+   TTF_Init();
+   SDL_CreateWindowAndRenderer(w, h, 0, &window, &renderer);
+   //sdl things------------
+   surface = SDL_CreateRGBSurface(0, w , h, 32, 0, 0, 0, 0);
+   baseFont = TTF_OpenFont("res/font/PrintedCircuitBoard.ttf", 48);
+   cube = IMG_LoadTexture(renderer, "res/cube0001.png");
+   btn_n = IMG_LoadTexture(renderer, "res/btn_norm.png");
+   btn_h = IMG_LoadTexture(renderer, "res/btn_high.png");
+   btn_c = IMG_LoadTexture(renderer, "res/btn_click.png");
+   btn_d = IMG_LoadTexture(renderer, "res/btn_dis.png");
+   //misc------------------
+   updateCookieCounter();
+   
+   FOR(322,{KEYS[i] = false;});
+   buttons = btn_list_new();
+   RECT c = {1,1,100,100};
+    buttons->add(buttons,btn_new(c,btn_n,btn_h,btn_c,btn_d));
+   return 1;
+}
+V tick(){buttons->tick(buttons, mpos);}
 V events(){
    SDL_GetMouseState(&mpos.x, &mpos.y);
    SDL_Event e;
@@ -85,24 +107,6 @@ V render(){
 
 V loop(){ events(); tick(); render(); t++; }
 
-I init (){
-   //base sdl--------------
-   SDL_Init(SDL_INIT_VIDEO);
-   TTF_Init();
-   SDL_CreateWindowAndRenderer(w, h, 0, &window, &renderer);
-   //sdl things------------
-   surface = SDL_CreateRGBSurface(0, w , h, 32, 0, 0, 0, 0);
-   baseFont = TTF_OpenFont("res/font/PrintedCircuitBoard.ttf", 48);
-   cube = IMG_LoadTexture(renderer, "res/cube0001.png");
-   //misc------------------
-   updateCookieCounter();
-   
-   FOR(322,{KEYS[i] = false;});
-   buttons = btn_list_new();
-   RECT c = {1,1,100,100};
-    buttons->add(buttons,btn_new(c,cube,cube,cube,cube));
-   return 1;
-}
 
 I main(int argc, char* argv[]) {
    if(!init()){printf("INIT ERROR\n");return 0;}
