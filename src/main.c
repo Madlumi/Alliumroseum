@@ -22,7 +22,7 @@ I w= 512; I h= 512;
 #define keyn 512 
 #define mkeyn 24
 B KEYS[keyn];
-B MKEYS[mkeyn];
+I MKEYS[mkeyn];
 POINT mpos = {0,0};
 
 I running=1;I t = 0;
@@ -67,10 +67,11 @@ V tick(){
 V events(){
    SDL_GetMouseState(&mpos.x, &mpos.y);
    SDL_Event e;
+   FOR(mkeyn,{if(MKEYS[i]>1){MKEYS[i]--;}});
    W(SDL_PollEvent(&e)) {
       if (e.type==SDL_KEYDOWN){if(!IN(e.key.keysym.sym,0,keyn-1)){printf("key: %d\n",e.key.keysym.sym);return;}KEYS[e.key.keysym.sym] = 1;}
       eif (e.type == SDL_KEYUP){if(!IN(e.key.keysym.sym,0,keyn-1)){return;}KEYS[e.key.keysym.sym] = 0;}
-      eif (e.type == SDL_MOUSEBUTTONDOWN){MKEYS[0]=1;}
+      eif (e.type == SDL_MOUSEBUTTONDOWN){MKEYS[0]=2;}
       eif (e.type == SDL_MOUSEBUTTONUP){MKEYS[0]=0;}
       eif (e.type == SDL_QUIT){quit();}
    }

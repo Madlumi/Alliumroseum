@@ -9,6 +9,9 @@ typedef void V ;
 typedef char   C;
 typedef char*  S;
 
+#define SW switch
+#define CA(x,y) case x: y; break;
+#define BR break
 #define PRIV static;
 #define IN(x,l,h) ((l)<=(x)&&(x)<=(h))
 #define eif else if
