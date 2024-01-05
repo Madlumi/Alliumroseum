@@ -1,3 +1,6 @@
+#include "mutil.h"
+#include "mutilSDL.h"
+
 #include <SDL.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -18,27 +21,26 @@ TTF_Font* baseFont;
 
 SDL_Texture* cube ;
 
-Buttons *buttons;
+btn_list *buttons;
 
-int w= 512;
-int h= 512;
+I w= 512;
+I h= 512;
 
 //
 SDL_Point mpos = {0,0};
-int mx=-1, my=-1;
-int running=1;
-int t = 0;
+I running=1;
+I t = 0;
 
-int cookies=0;
+I cookies=0;
 
 SDL_Color White = {255, 255, 255};
-SDL_Rect texture_rect = {0,0,200,200};
+RECT texture_rect = {0,0,200,200};
 bool KEYS[322];
 void quit(){
    SDL_Quit();
    running=0;
 }
-char msg[256];
+C msg[256];
 void updateCookieCounter(){
    sprintf(msg,"%d Cookies", cookies);
 }
@@ -53,7 +55,7 @@ void events(){
          if (e.key.keysym.sym>322){continue;}
          KEYS[e.key.keysym.sym] = false;
       }else if (e.type == SDL_MOUSEBUTTONDOWN){
-            Button * b = button_Within(buttons, mpos);
+            btn * b = btn_Within(buttons, mpos);
             if(b!=NULL){
                cookies++;
                updateCookieCounter();
@@ -83,7 +85,7 @@ void render(){
    screenTexture = SDL_CreateTextureFromSurface(renderer, surface);
    surfaceMessage = TTF_RenderText_Blended(baseFont,msg , White);
    Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
-   SDL_Rect Message_rect; //create a rect
+   RECT Message_rect; //create a rect
    Message_rect.x = 100;  //controls the rect's x coordinate 
    Message_rect.y = 100; // controls the rect's y coordinte
    Message_rect.w = 300; // controls the width of the rect
@@ -107,7 +109,7 @@ void mainLoop(){
    t++;
 }
 
-int init (){
+I init (){
    //base sdl--------------
    SDL_Init(SDL_INIT_VIDEO);
    TTF_Init();
@@ -120,13 +122,13 @@ int init (){
    updateCookieCounter();
    
    for(int i = 0; i < 322; i++){KEYS[i] = false;}
-   buttons = buttons_Init();
-   SDL_Rect c = {1,1,100,100};
-    buttons_Add(buttons,button_New(c));
+   buttons = btns_Init();
+   RECT c = {1,1,100,100};
+    btns_Add(buttons,btn_New(c));
    return 1;
 }
 
-int main(int argc, char* argv[]) {
+I main(int argc, char* argv[]) {
    if(!init()){
       printf("INIT ERROR\n");
       return 0;
