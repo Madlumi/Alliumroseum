@@ -13,23 +13,16 @@
 #include <stdlib.h>
 #include "button.c"
 
-SDL_Window *window;
-SDL_Renderer *renderer;
-SDL_Surface *surface;
-TTF_Font* baseFont; 
+SDL_Window *window;SDL_Renderer *renderer;SDL_Surface *surface;
 
-SDL_Texture* cube ;
-
+TTF_Font* baseFont; SDL_Texture* cube ;
 btn_list *buttons;
-
 I w= 512; I h= 512;
-
 //Input
 bool KEYS[322];
 POINT mpos = {0,0};
 
-I running=1;
-I t = 0;
+I running=1;I t = 0;
 
 I cookies=0;
 C msg[256];
@@ -46,11 +39,11 @@ V events(){
    SDL_Event e;
    W(SDL_PollEvent(&e)) {
       if (IN(e.key.keysym.sym,0,322-1)){
-         if (e.type==SDL_KEYDOWN){KEYS[e.key.keysym.sym] = true;}
-         eif (e.type == SDL_KEYUP){KEYS[e.key.keysym.sym] = false;}
+         if (e.type==SDL_KEYDOWN){KEYS[e.key.keysym.sym] = 1;}
+         eif (e.type == SDL_KEYUP){KEYS[e.key.keysym.sym] = 0;}
       }
       if (e.type == SDL_MOUSEBUTTONDOWN){
-            btn * b = btn_Within(buttons, mpos);
+            btn * b = buttons->in(buttons, mpos);
             if(b!=NULL){cookies++;updateCookieCounter();}
       }
       eif (e.type == SDL_QUIT){quit();}
@@ -104,9 +97,9 @@ I init (){
    updateCookieCounter();
    
    FOR(322,{KEYS[i] = false;});
-   buttons = btns_Init();
+   buttons = btn_list_new();
    RECT c = {1,1,100,100};
-    btns_Add(buttons,btn_New(c));
+    buttons->add(buttons,btn_New(c));
    return 1;
 }
 
