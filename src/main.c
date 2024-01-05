@@ -1,7 +1,6 @@
 #include "mutil.h"
 #include "mutilSDL.h"
 
-#include <SDL.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -23,59 +22,47 @@ SDL_Texture* cube ;
 
 btn_list *buttons;
 
-I w= 512;
-I h= 512;
+I w= 512; I h= 512;
 
-//
-SDL_Point mpos = {0,0};
+//Input
+bool KEYS[322];
+POINT mpos = {0,0};
+
 I running=1;
 I t = 0;
 
 I cookies=0;
-
-SDL_Color White = {255, 255, 255};
-RECT texture_rect = {0,0,200,200};
-bool KEYS[322];
-void quit(){
-   SDL_Quit();
-   running=0;
-}
 C msg[256];
-void updateCookieCounter(){
-   sprintf(msg,"%d Cookies", cookies);
-}
-void events(){
+
+COL White = {255, 255, 255};
+RECT texture_rect = {0,0,200,200};
+
+V quit(){SDL_Quit(); running=0;}
+V updateCookieCounter(){sprintf(msg,"%d Cookies", cookies);}
+
+V tick(){}
+V events(){
    SDL_GetMouseState(&mpos.x, &mpos.y);
    SDL_Event e;
-   while (SDL_PollEvent(&e)) {
-      if (e.type==SDL_KEYDOWN){
-         if (e.key.keysym.sym>322){continue;}
-         KEYS[e.key.keysym.sym] = true;
-      }else if (e.type == SDL_KEYUP){
-         if (e.key.keysym.sym>322){continue;}
-         KEYS[e.key.keysym.sym] = false;
-      }else if (e.type == SDL_MOUSEBUTTONDOWN){
-            btn * b = btn_Within(buttons, mpos);
-            if(b!=NULL){
-               cookies++;
-               updateCookieCounter();
-            }
-      }else if (e.type == SDL_QUIT){
-         quit();
+   W(SDL_PollEvent(&e)) {
+      if (IN(e.key.keysym.sym,0,322-1)){
+         if (e.type==SDL_KEYDOWN){KEYS[e.key.keysym.sym] = true;}
+         eif (e.type == SDL_KEYUP){KEYS[e.key.keysym.sym] = false;}
       }
+      if (e.type == SDL_MOUSEBUTTONDOWN){
+            btn * b = btn_Within(buttons, mpos);
+            if(b!=NULL){cookies++;updateCookieCounter();}
+      }
+      eif (e.type == SDL_QUIT){quit();}
    }
-   if(KEYS[SDLK_q]) {
-      quit();  
-   }
+   if(KEYS[SDLK_q]){quit();}
 }
 
-void tick(){
-}
 
 SDL_Texture *screenTexture;
 SDL_Surface* surfaceMessage;
 SDL_Texture* Message;
-void render(){
+V render(){
    //arbitrary draw example
    if (SDL_MUSTLOCK(surface)) SDL_LockSurface(surface);
    Uint8 * pixels = surface->pixels;
@@ -102,12 +89,7 @@ void render(){
    SDL_DestroyTexture(Message);
 }
 
-void mainLoop(){
-   events();
-   tick();
-   render();
-   t++;
-}
+V loop(){ events(); tick(); render(); t++; }
 
 I init (){
    //base sdl--------------
@@ -121,7 +103,7 @@ I init (){
    //misc------------------
    updateCookieCounter();
    
-   for(int i = 0; i < 322; i++){KEYS[i] = false;}
+   FOR(322,{KEYS[i] = false;});
    buttons = btns_Init();
    RECT c = {1,1,100,100};
     btns_Add(buttons,btn_New(c));
@@ -129,16 +111,10 @@ I init (){
 }
 
 I main(int argc, char* argv[]) {
-   if(!init()){
-      printf("INIT ERROR\n");
-      return 0;
-   }
+   if(!init()){printf("INIT ERROR\n");return 0;}
 #ifdef __EMSCRIPTEN__
    emscripten_set_main_loop(mainLoop, 0, 1);
 #else
-   while(running) {        
-      mainLoop();
-      SDL_Delay(16);
-   }
+   W(running){loop(); SDL_Delay(16);}
 #endif 
 }

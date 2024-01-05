@@ -1,4 +1,4 @@
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include "mutil.h"
 #include "mutilSDL.h"
 #include <SDL2/SDL_rect.h>
