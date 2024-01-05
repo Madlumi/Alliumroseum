@@ -8,10 +8,10 @@
 #define _BUTTON
 typedef struct {
    SDL_Rect r;
-   TEXTURE * img_norm;
-   TEXTURE * img_click;
-   TEXTURE * img_high;
-   TEXTURE * img_dis;
+   TEXTURE * tx_norm;
+   TEXTURE * tx_click;
+   TEXTURE * tx_high;
+   TEXTURE * tx_dis;
 }btn;
 typedef struct _BTN_LIST {
    I i;
@@ -24,9 +24,9 @@ typedef struct _BTN_LIST {
    V (*draw)(struct _BTN_LIST *self, SDL_Renderer *ren);
 } btn_list;
 
-btn *btn_new(SDL_Rect r, TEXTURE * img_norm, TEXTURE * img_click,TEXTURE * img_high,TEXTURE * img_dis){
+btn *btn_new(SDL_Rect r, TEXTURE * tx_norm, TEXTURE * tx_click,TEXTURE * tx_high,TEXTURE * tx_dis){
    btn *b = malloc(sizeof(btn));
-   b->img_norm=img_norm;b->img_click=img_click;b->img_high=img_high;b->img_dis=img_dis;
+   b->tx_norm=tx_norm;b->tx_click=tx_click;b->tx_high=tx_high;b->tx_dis=tx_dis;
    b->r=r;
    return b;
 }
@@ -34,7 +34,7 @@ static void _add( struct _BTN_LIST * b,btn *butt){if(b->i<b->size){b->btns[b->i]
 static void _rm( struct _BTN_LIST * b, I i){printf("rm not implemented\n"); }
 static void _free(btn_list * b){ }
 static btn * _in(btn_list * b,POINT p){FOR(b->i, {if(SDL_PointInRect(&p, &b->btns[i].r)){return &b->btns[i]; } }); return NULL;}
-static void _draw(btn_list * b, SDL_Renderer *ren){FOR(b->i,{SDL_RenderCopy(ren, b->btns[i].img_norm, NULL, &b->btns[i].r); })}
+static void _draw(btn_list * b, SDL_Renderer *ren){FOR(b->i,{SDL_RenderCopy(ren, b->btns[i].tx_norm, NULL, &b->btns[i].r); })}
 btn_list * btn_list_new(){
    btn_list * b= malloc(sizeof(btn_list));
    b->add=_add;b->rm=_rm;b->free=_free;b->in=_in;b->draw=_draw;
